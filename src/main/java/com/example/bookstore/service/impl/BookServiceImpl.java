@@ -51,16 +51,19 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public List<Book> getMostSellingByAuthorPartial(String name) {
+        name = "%" + name + "%";
         return bookDao.getMostSellingByAuthorPartial(name);
     }
 
     @Override
     public List<Book> getMostPublishedByAuthorPartial(String name) {
+        name = "%" + name + "%";
         return bookDao.getMostPublishedByAuthorPartial(name);
     }
 
     @Override
     public List<Book> getMostSuccessfulByAuthorPartial(String name) {
+        name = "%" + name + "%";
         return bookDao.getMostSuccessfulByAuthorPartial(name);
     }
 }
