@@ -1,6 +1,6 @@
 package com.example.bookstore.dao;
 
-import com.example.bookstore.dto.response.AuthorDaoResponseDto;
+import com.example.bookstore.dto.response.AuthorWithRate;
 import com.example.bookstore.model.Author;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface AuthorDao extends JpaRepository<Author, Long> {
-    @Query(value = "SELECT t.id, t.author AS name, t.bd AS birthDay, "
+    @Query(value = "SELECT t.id, t.author AS name, t.bd AS birthDate, "
             + "t.phone AS phone, t.email AS email, sum(t.sbr) AS rate "
             + "FROM (SELECT "
             + "((SELECT max(b.sold_amount/b.published_amount) "
@@ -29,5 +29,5 @@ public interface AuthorDao extends JpaRepository<Author, Long> {
             + "GROUP BY t.id "
             + "ORDER BY rate DESC "
             + "LIMIT 1", nativeQuery = true)
-    AuthorDaoResponseDto getMostSuccessful();
+    AuthorWithRate getMostSuccessful();
 }
