@@ -2,7 +2,7 @@ package com.example.bookstore.dto.response;
 
 import java.time.LocalDate;
 
-public interface AuthorDaoResponseDto {
+public interface AuthorWithRate {
     Long getId();
 
     String getName();

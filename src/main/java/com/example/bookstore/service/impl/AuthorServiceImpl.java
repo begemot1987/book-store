@@ -1,22 +1,18 @@
 package com.example.bookstore.service.impl;
 
 import com.example.bookstore.dao.AuthorDao;
-import com.example.bookstore.dto.response.AuthorWithRateResponseDto;
+import com.example.bookstore.dto.response.AuthorWithRate;
 import com.example.bookstore.model.Author;
 import com.example.bookstore.service.AuthorService;
-import com.example.bookstore.service.mapper.impl.AuthorWithRateResponseDtoMapper;
 import java.util.List;
 import org.springframework.stereotype.Service;
 
 @Service
 public class AuthorServiceImpl implements AuthorService {
     private final AuthorDao authorDao;
-    private final AuthorWithRateResponseDtoMapper responseDtoMapper;
 
-    public AuthorServiceImpl(AuthorDao authorDao,
-                             AuthorWithRateResponseDtoMapper responseDtoMapper) {
+    public AuthorServiceImpl(AuthorDao authorDao) {
         this.authorDao = authorDao;
-        this.responseDtoMapper = responseDtoMapper;
     }
 
     @Override
@@ -45,7 +41,7 @@ public class AuthorServiceImpl implements AuthorService {
     }
 
     @Override
-    public AuthorWithRateResponseDto getMostSuccessful() {
-        return responseDtoMapper.mapToDto(authorDao.getMostSuccessful());
+    public AuthorWithRate getMostSuccessful() {
+        return authorDao.getMostSuccessful();
     }
 }

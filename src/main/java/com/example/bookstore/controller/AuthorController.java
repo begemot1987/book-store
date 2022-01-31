@@ -5,8 +5,7 @@ import com.example.bookstore.dto.response.AuthorResponseDto;
 import com.example.bookstore.dto.response.AuthorWithRateResponseDto;
 import com.example.bookstore.model.Author;
 import com.example.bookstore.service.AuthorService;
-import com.example.bookstore.service.mapper.impl.AuthorRequestDtoMapper;
-import com.example.bookstore.service.mapper.impl.AuthorResponseDtoMapper;
+import com.example.bookstore.service.mapper.AuthorMapper;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -22,37 +21,33 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/authors")
 public class AuthorController {
     private final AuthorService authorService;
-    private final AuthorRequestDtoMapper requestDtoMapper;
-    private final AuthorResponseDtoMapper responseDtoMapper;
+    private final AuthorMapper authorMapper;
 
-    public AuthorController(AuthorService authorService,
-                            AuthorRequestDtoMapper requestDtoMapper,
-                            AuthorResponseDtoMapper responseDtoMapper) {
+    public AuthorController(AuthorService authorService, AuthorMapper authorMapper) {
         this.authorService = authorService;
-        this.requestDtoMapper = requestDtoMapper;
-        this.responseDtoMapper = responseDtoMapper;
+        this.authorMapper = authorMapper;
     }
 
     @GetMapping
     public List<AuthorResponseDto> getAll() {
         return authorService.getAll()
                 .stream()
-                .map(responseDtoMapper::mapToDto)
+                .map(authorMapper::authorToResponseDto)
                 .collect(Collectors.toList());
     }
 
     @PostMapping
     public AuthorResponseDto add(@RequestBody AuthorRequestDto requestDto) {
-        return responseDtoMapper
-                .mapToDto(authorService.add(requestDtoMapper.mapToModel(requestDto)));
+        return authorMapper.authorToResponseDto(authorService
+                .add(authorMapper.requestDtoToAuthor(requestDto)));
     }
 
     @PutMapping("/{id}")
     public AuthorResponseDto update(@PathVariable Long id,
                                     @RequestBody AuthorRequestDto requestDto) {
-        Author author = requestDtoMapper.mapToModel(requestDto);
+        Author author = authorMapper.requestDtoToAuthor(requestDto);
         author.setId(id);
-        return responseDtoMapper.mapToDto(authorService.update(author));
+        return authorMapper.authorToResponseDto(authorService.update(author));
     }
 
     @DeleteMapping("/{id}")
@@ -62,6 +57,7 @@ public class AuthorController {
 
     @GetMapping("/top")
     public AuthorWithRateResponseDto getMostSuccessful() {
-        return authorService.getMostSuccessful();
+        return authorMapper
+                .authorWithRateToResponseDto(authorService.getMostSuccessful());
     }
 }
